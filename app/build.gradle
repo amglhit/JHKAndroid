@@ -1,0 +1,106 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion versions.compileSdk
+    defaultConfig {
+        applicationId "com.amglhit.jhk"
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi'
+        }
+
+        applicationVariants.all { variant ->
+            variant.outputs.each { output ->
+                String build = new Date().format("MMddHH") + (char) (65 + (int) ((Calendar.getInstance().get(Calendar.MINUTE) % 60) / 15))
+                String fileName =
+                        "jhk_${variant.versionName.replace(".", "")}_${variant.versionCode}_${variant.buildType.name}_build${build}.apk"
+
+                output.outputFileName = fileName
+            }
+        }
+
+        resConfigs "en", "zh"
+    }
+
+    signingConfigs {
+        jhk {
+            storeFile file(System.properties['keyStore'])
+            storePassword System.properties['keyStorePWd']
+            keyAlias System.properties['keyAlias']
+            keyPassword System.properties['keyAliasPassword']
+        }
+    }
+
+    androidExtensions {
+        experimental = true
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            shrinkResources true
+            signingConfig signingConfigs.jhk
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            debuggable true
+            signingConfig signingConfigs.jhk
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility versions.sourceCompat
+        targetCompatibility versions.targetCompat
+    }
+
+    dexOptions {
+        additionalParameters = ["--set-max-idx-number=62000"]
+        jumboMode true
+    }
+
+    //!!! 避免api26引起的crash，所有依赖的support都改成全局support版本
+    configurations.all {
+        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+            def requested = details.requested
+            if (requested.group == 'com.android.support') {
+                if (!requested.name.startsWith("multidex")) {
+                    details.useVersion "$versions.supportLibrary"
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:$versions.supportLibrary"
+    implementation "com.android.support.constraint:constraint-layout:$versions.constraintLayout"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "com.android.support.test:runner:$versions.testRunner"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
+
+    // Java8 support for Lifecycles
+    implementation "android.arch.lifecycle:common-java8:$versions.lifecycle"
+    implementation "android.arch.lifecycle:extensions:$versions.lifecycle"
+    implementation "android.arch.lifecycle:runtime:$versions.lifecycle"
+    kapt "android.arch.lifecycle:compiler:$versions.lifecycle"
+
+    implementation project(':msuite')
+
+    implementation 'com.google.firebase:firebase-core:16.0.0'
+
+    implementation "com.jakewharton.timber:timber:$versions.timber"
+}
+
+apply plugin: 'com.google.gms.google-services'

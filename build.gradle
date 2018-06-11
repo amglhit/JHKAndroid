@@ -1,0 +1,57 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+
+    def versions = [:]
+    versions.sourceCompat = JavaVersion.VERSION_1_8
+    versions.targetCompat = JavaVersion.VERSION_1_8
+
+    versions.compileSdk = 27
+    versions.minSdk = 16
+    versions.targetSdk = 27
+    versions.buildTools = '27.0.3'
+    versions.supportLibrary = '27.1.1'
+    versions.lifecycle = '1.1.1'
+    versions.constraintLayout = '1.1.0'
+
+    versions.junit = '4.12'
+    versions.testRunner = '1.0.1'
+    versions.espresso = '3.0.1'
+
+    versions.timber = "4.6.0"
+    versions.stetho = '1.5.0'
+    versions.okhttp3 = '3.10.0'
+    versions.retrofit = '2.4.0'
+    versions.rxAndroid = '2.0.2'
+    versions.rxJava = '2.1.12'
+    versions.rxKotlin = '2.2.0'
+
+    ext.versions = versions
+
+    ext.kotlin_version = '1.2.41'
+    ext.gradle_plugin_version = '3.1.1'
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath "com.android.tools.build:gradle:$gradle_plugin_version"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.google.gms:google-services:4.0.1'
+    }
+}
+
+allprojects {
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        google()
+        jcenter()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
