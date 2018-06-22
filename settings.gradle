@@ -1,1 +1,1 @@
-include ':app', ':msuite'
+include ':app', ':msuite', ':mlocation'

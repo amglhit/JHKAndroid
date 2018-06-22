@@ -164,7 +164,7 @@ fun Context.listInstalledApp(): Single<ArrayList<MAppInfo>> {
 }
 
 fun Activity.toast(message: String, isLong: Boolean = false) {
-  if (message.isNotEmpty() && isFinishingSafe()) {
+  if (message.isNotEmpty() && !isFinishingSafe()) {
     makeToast(message, isLong).safeShow()
   }
 }

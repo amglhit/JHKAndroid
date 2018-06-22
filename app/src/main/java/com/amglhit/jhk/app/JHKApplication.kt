@@ -1,12 +1,15 @@
 package com.amglhit.jhk.app
 
+import android.content.Context
+import android.support.multidex.MultiDex
+import com.amglhit.mlocation.client.LocationClient
 import com.amglhit.msuite.base.GlobalExceptionHandler
 import com.amglhit.msuite.base.MApplication
 import com.amglhit.msuite.isMainProcess
 import com.google.firebase.analytics.FirebaseAnalytics
 import timber.log.Timber
 
-class JHKApplication : MApplication() {
+open class JHKApplication : MApplication() {
   companion object {
     @JvmStatic
     lateinit var application: JHKApplication
@@ -16,14 +19,18 @@ class JHKApplication : MApplication() {
       private set
   }
 
+  override fun attachBaseContext(base: Context?) {
+    super.attachBaseContext(base)
+    MultiDex.install(this)
+  }
+
   override fun onCreate() {
     super.onCreate()
     application = this
     firebase = FirebaseAnalytics.getInstance(this)
-    Timber.plant(Timber.DebugTree())
     Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
     if (isMainProcess()) {
-
+      LocationClient.initClient(this)
     }
   }
 

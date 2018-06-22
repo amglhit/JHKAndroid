@@ -82,25 +82,45 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$versions.supportLibrary"
     implementation "com.android.support.constraint:constraint-layout:$versions.constraintLayout"
-    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     testImplementation "junit:junit:$versions.junit"
     androidTestImplementation "com.android.support.test:runner:$versions.testRunner"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
 
-    // Java8 support for Lifecycles
-    implementation "android.arch.lifecycle:common-java8:$versions.lifecycle"
+    implementation "com.jakewharton.timber:timber:$versions.timber"
+
+    //ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$versions.lifecycle"
-    implementation "android.arch.lifecycle:runtime:$versions.lifecycle"
-    kapt "android.arch.lifecycle:compiler:$versions.lifecycle"
+    // Java8 support for Lifecycle
+    implementation "android.arch.lifecycle:common-java8:$versions.lifecycle"
+    // optional - Test helpers for LiveData
+    testImplementation "android.arch.core:core-testing:$versions.lifecycle"
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
 
     implementation project(':msuite')
+    implementation project(':mlocation')
 
-    implementation 'com.google.firebase:firebase-core:16.0.0'
+    implementation 'com.android.support:multidex:1.0.3'
 
-    implementation "com.jakewharton.timber:timber:$versions.timber"
+//    debugImplementation('com.facebook.sonar:sonar:0.0.1') {
+//        exclude group: 'android'
+//        exclude group: 'javax'
+//        exclude group: 'jsr-305'
+//        exclude group: 'okhttp3'
+//        exclude group: 'okio'
+//        exclude group: 'org'
+//        exclude group: 'com.google'
+//    }
+
+    implementation("com.github.hotchemi:permissionsdispatcher:3.2.0") {
+        // if you don't use android.app.Fragment you can exclude support for them
+        exclude module: "support-v13"
+    }
+
+    kapt "com.github.hotchemi:permissionsdispatcher-processor:3.2.0"
 }
 
 apply plugin: 'com.google.gms.google-services'
