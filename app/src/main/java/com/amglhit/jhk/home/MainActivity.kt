@@ -2,8 +2,6 @@ package com.amglhit.jhk.home
 
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import com.amglhit.jhk.R
 import com.amglhit.jhk.base.BasePermissionActivity
@@ -13,7 +11,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
 class MainActivity : BasePermissionActivity() {
-
   private lateinit var viewModel: HomeViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,14 +32,31 @@ class MainActivity : BasePermissionActivity() {
 
     btn_open.setOnClickListener {
       locationGotWithPermissionCheck()
-      //      locationPermissionGotWithPermissionCheck()
-//      val intent = Intent(Intent.ACTION_VIEW)
-//      intent.data = Uri.parse("mobike://launch?data=1")
-//      startActivity(intent)
+    }
+
+    btn_read.setOnClickListener {
+      readSP()
+    }
+    btn_write.setOnClickListener {
+      writeSP()
     }
   }
 
   override fun locationGot() {
     viewModel.locationLiveData.requestLocation()
+  }
+
+  private var index = 1
+
+  private fun writeSP() {
+    index++
+    viewModel.homeSP.mobikeHome = "test-name $index"
+    viewModel.homeSP.user = HomeUser("test_user  $index", 1, city = UserCity("BeiJing"))
+    viewModel.userState.value = "state - $index"
+  }
+
+  private fun readSP() {
+    Timber.d("read from home sp ${viewModel.homeSP.mobikeHome}")
+    Timber.d("read from home sp ${viewModel.homeSP.user}")
   }
 }

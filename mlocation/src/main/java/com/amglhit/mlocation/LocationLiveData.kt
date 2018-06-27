@@ -32,6 +32,7 @@ class LocationLiveData : LiveData<AMapLocation>() {
     super.onInactive()
     isActive = false
 
+    enableUpdate = false
     stopUpdate()
   }
 
@@ -53,7 +54,7 @@ class LocationLiveData : LiveData<AMapLocation>() {
     }
   }
 
-  private fun startUpdate(keepRequest: Boolean = true) {
+  private fun startUpdate() {
     Timber.d("start location update")
     LocationClient.client.setLocationListener(locationListener)
     LocationClient.client.startLocation()

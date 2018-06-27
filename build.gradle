@@ -25,10 +25,11 @@ buildscript {
     versions.rxAndroid = '2.0.2'
     versions.rxJava = '2.1.12'
     versions.rxKotlin = '2.2.0'
+    versions.gson = '2.8.2'
 
     ext.versions = versions
 
-    ext.kotlin_version = '1.2.41'
+    ext.kotlin_version = '1.2.50'
     ext.gradle_plugin_version = '3.1.1'
     repositories {
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }

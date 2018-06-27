@@ -105,22 +105,17 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-//    debugImplementation('com.facebook.sonar:sonar:0.0.1') {
-//        exclude group: 'android'
-//        exclude group: 'javax'
-//        exclude group: 'jsr-305'
-//        exclude group: 'okhttp3'
-//        exclude group: 'okio'
-//        exclude group: 'org'
-//        exclude group: 'com.google'
-//    }
-
     implementation("com.github.hotchemi:permissionsdispatcher:3.2.0") {
         // if you don't use android.app.Fragment you can exclude support for them
         exclude module: "support-v13"
     }
 
     kapt "com.github.hotchemi:permissionsdispatcher-processor:3.2.0"
+
+    debugImplementation 'com.facebook.stetho:stetho:1.5.0'
+    debugImplementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+
+    implementation "com.google.code.gson:gson:$versions.gson"
 }
 
 apply plugin: 'com.google.gms.google-services'

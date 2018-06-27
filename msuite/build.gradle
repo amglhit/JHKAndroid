@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -20,6 +21,9 @@ android {
         }
     }
 
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
@@ -32,8 +36,7 @@ dependencies {
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
 
     implementation "com.android.support:design:$versions.supportLibrary"
-
-    implementation "com.jakewharton.timber:timber:$versions.timber"
+    api "com.jakewharton.timber:timber:$versions.timber"
 
     // Java8 support for Lifecycles
     implementation "android.arch.lifecycle:common-java8:$versions.lifecycle"
@@ -41,7 +44,9 @@ dependencies {
     implementation "android.arch.lifecycle:runtime:$versions.lifecycle"
     kapt "android.arch.lifecycle:compiler:$versions.lifecycle"
 
-    implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"
-    implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
-    implementation "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
+    api "io.reactivex.rxjava2:rxjava:$versions.rxJava"
+    api "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
+    api "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
+
+    api "com.google.code.gson:gson:$versions.gson"
 }

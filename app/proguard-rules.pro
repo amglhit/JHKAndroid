@@ -19,3 +19,18 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+
+
+##---------------Begin: proguard configuration for Gson ----------
+-keep public class com.google.gson.**
+-keep public class com.google.gson.** {public private protected *;}
+
+-keepattributes Signature
+-keepattributes *Annotation*
+
+-keep class * {
+   @com.google.gson.annotations.SerializedName <fields>;
+   @com.google.gson.annotations.SerializedName <methods>;
+}
+##---------------End: proguard configuration for Gson ----------
