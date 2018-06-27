@@ -16,7 +16,7 @@ class HomeViewModel : ViewModel() {
   init {
     disposables.add(
       userState.observe { old, new ->
-        Timber.d("user state changed: $old -> $new")
+        Timber.d("user state changed: $old -> $new   at|${Thread.currentThread()} ")
       })
   }
 

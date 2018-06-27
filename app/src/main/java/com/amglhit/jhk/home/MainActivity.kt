@@ -52,7 +52,10 @@ class MainActivity : BasePermissionActivity() {
     index++
     viewModel.homeSP.mobikeHome = "test-name $index"
     viewModel.homeSP.user = HomeUser("test_user  $index", 1, city = UserCity("BeiJing"))
-    viewModel.userState.value = "state - $index"
+    Thread {
+      Timber.d("change state at |${Thread.currentThread()}")
+      viewModel.userState.value = "state - $index"
+    }.start()
   }
 
   private fun readSP() {

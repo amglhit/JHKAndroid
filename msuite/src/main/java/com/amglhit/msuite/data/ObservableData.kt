@@ -8,7 +8,7 @@ import kotlin.properties.Delegates
 /**
  * 可以监听变化的数据,
  * 通过observe方法注册onChange监听
- * value值改变时回调onChange
+ * value值改变时回调onChange，回调在主线程
  */
 class ObservableData<T>(default: T) {
   private val subject: BehaviorSubject<Pair<T, T>> =
