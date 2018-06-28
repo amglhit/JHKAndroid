@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion versions.compileSdk
+
+    defaultConfig {
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:$versions.supportLibrary"
+    implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation "com.android.support.test:runner:$versions.testRunner"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
+
+    implementation "com.jakewharton.timber:timber:$versions.timber"
+
+    // Java8 support for Lifecycles
+    implementation "android.arch.lifecycle:common-java8:$versions.lifecycle"
+    implementation "android.arch.lifecycle:extensions:$versions.lifecycle"
+    implementation "android.arch.lifecycle:runtime:$versions.lifecycle"
+    kapt "android.arch.lifecycle:compiler:$versions.lifecycle"
+
+    implementation 'com.amap.api:3dmap:6.3.0'
+
+//
+//    implementation 'androidx.appcompat:appcompat:1.0.0-alpha1'
+//    testImplementation 'junit:junit:4.12'
+//    androidTestImplementation 'androidx.test:runner:1.1.0-alpha3'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha3'
+}

@@ -13,6 +13,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
+        multiDexEnabled true
+
         ndk {
             //设置支持的SO库架构
             abiFilters 'armeabi'
@@ -81,10 +83,17 @@ android {
 }
 
 dependencies {
+    implementation project(':msuite')
+    implementation project(':mlocation')
+    implementation project(':mmap')
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation "com.android.support:appcompat-v7:$versions.supportLibrary"
     implementation "com.android.support.constraint:constraint-layout:$versions.constraintLayout"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
     testImplementation "junit:junit:$versions.junit"
     androidTestImplementation "com.android.support.test:runner:$versions.testRunner"
     androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
@@ -99,9 +108,6 @@ dependencies {
     testImplementation "android.arch.core:core-testing:$versions.lifecycle"
 
     implementation 'com.google.firebase:firebase-core:16.0.1'
-
-    implementation project(':msuite')
-    implementation project(':mlocation')
 
     implementation 'com.android.support:multidex:1.0.3'
 

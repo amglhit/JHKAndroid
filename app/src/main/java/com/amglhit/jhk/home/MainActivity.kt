@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import com.amglhit.jhk.R
+import com.amglhit.jhk.base.BaseMapActivity
 import com.amglhit.jhk.base.BasePermissionActivity
 import com.amglhit.jhk.base.locationGotWithPermissionCheck
 import com.amglhit.jhk.splash.SplashActivity
@@ -44,6 +45,8 @@ class MainActivity : BasePermissionActivity() {
 
   override fun locationGot() {
     viewModel.locationLiveData.requestLocation()
+    val intent = BaseMapActivity.newIntent(this)
+    startActivity(intent)
   }
 
   private var index = 1

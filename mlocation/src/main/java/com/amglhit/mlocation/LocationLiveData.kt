@@ -7,12 +7,10 @@ import com.amglhit.mlocation.client.LocationClient
 import timber.log.Timber
 
 class LocationLiveData : LiveData<AMapLocation>() {
-  private val locationListener = object : AMapLocationListener {
-    override fun onLocationChanged(p0: AMapLocation?) {
-      postValue(p0)
-      if (!enableUpdate) {
-        stopUpdate()
-      }
+  private val locationListener = AMapLocationListener {
+    postValue(it)
+    if (!enableUpdate) {
+      stopUpdate()
     }
   }
 
