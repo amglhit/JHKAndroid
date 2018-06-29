@@ -1,6 +1,8 @@
 package com.amglhit.mmap.base
 
+import android.graphics.Bitmap
 import android.os.Bundle
+import com.amap.api.maps.model.Marker
 
 interface IMapView {
   companion object {
@@ -19,9 +21,22 @@ interface IMapView {
     zoomLevel: Float = default_zoom_level
   )
 
+  fun getMyLocation(): Pair<Double, Double>
+
   fun onCreate(savedInstanceState: Bundle? = null)
   fun onDestroy()
   fun onResume()
   fun onPause()
   fun onSaveInstanceState(outState: Bundle?)
+  fun addMarker(data: MMarker): String
+  fun clearMarkers()
+  fun removeMarker(id: String)
 }
+
+data class MMarker(
+  var lat: Double,
+  var lng: Double,
+  var title: String,
+  var snippet: String,
+  var icon: Bitmap?
+)

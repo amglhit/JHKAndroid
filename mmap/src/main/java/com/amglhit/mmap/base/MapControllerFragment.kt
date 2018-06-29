@@ -9,6 +9,7 @@ import android.widget.Button
 
 import com.amglhit.mmap.R
 import timber.log.Timber
+import java.util.*
 
 class MapControllerFragment : Fragment() {
   companion object {
@@ -38,6 +39,8 @@ class MapControllerFragment : Fragment() {
     initView()
   }
 
+  private var lastMarkerId: String = ""
+  private var index: Int = 0
   private fun initView() {
     rootView.findViewById<Button>(R.id.btn_current_location).setOnClickListener {
       Timber.d("my location")
@@ -55,5 +58,27 @@ class MapControllerFragment : Fragment() {
     rootView.findViewById<Button>(R.id.btn_set_center).setOnClickListener {
       mmap.setCenter()
     }
+
+    rootView.findViewById<Button>(R.id.btn_add_marker).setOnClickListener {
+      //      lastMarkerId =
+      val p = generateMarker()
+      val data = MMarker(p.first, p.second, index++.toString(), "", null)
+      lastMarkerId = mmap.addMarker(data)
+    }
+
+    rootView.findViewById<Button>(R.id.btn_remove_marker).setOnClickListener {
+      mmap.removeMarker(lastMarkerId)
+    }
+
+    rootView.findViewById<Button>(R.id.btn_clear_marker).setOnClickListener {
+      mmap.clearMarkers()
+    }
+  }
+
+  private fun generateMarker(): Pair<Double, Double> {
+    val loc = mmap.getMyLocation()
+    val lat = loc.first.plus(Random().nextDouble() / 1000)
+    val lng = loc.second.plus(Random().nextDouble() / 1000)
+    return Pair(lat, lng)
   }
 }

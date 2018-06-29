@@ -29,4 +29,23 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="reset"/>
+
+  <Button
+    android:id="@+id/btn_add_marker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="marker"/>
+
+  <Button
+    android:id="@+id/btn_remove_marker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="marker-remove"/>
+
+  <Button
+    android:id="@+id/btn_clear_marker"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="marker-clear"/>
+
 </LinearLayout>
