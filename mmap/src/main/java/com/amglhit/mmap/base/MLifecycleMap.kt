@@ -1,10 +1,9 @@
-package com.amglhit.mmap.gd
+package com.amglhit.mmap.base
 
 import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.LifecycleObserver
 import android.arch.lifecycle.OnLifecycleEvent
 import android.os.Bundle
-import com.amglhit.mmap.base.IMapView
 
 class MLifecycleMap(lifecycle: Lifecycle, val mapView: IMapView) :
   LifecycleObserver {

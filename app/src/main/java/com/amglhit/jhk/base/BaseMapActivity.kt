@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.amglhit.jhk.R
 import com.amglhit.mmap.base.BaseMapFragment
 import com.amglhit.mmap.base.IMapView
-import com.amglhit.mmap.gd.view.MMapFragment
+import com.amglhit.mmap.gd.MMapFragment
 import com.amglhit.mmap.base.MapControllerFragment
 import timber.log.Timber
 

@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.amglhit.mmap.gd.MLifecycleMap
 
 abstract class BaseMapFragment : Fragment() {
   interface MapFragmentCallback {

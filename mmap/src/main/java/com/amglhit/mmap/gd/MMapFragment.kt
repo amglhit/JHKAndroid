@@ -1,9 +1,8 @@
-package com.amglhit.mmap.gd.view
+package com.amglhit.mmap.gd
 
 import com.amglhit.mmap.R
 import com.amglhit.mmap.base.BaseMapFragment
 import com.amglhit.mmap.base.IMapView
-import com.amglhit.mmap.gd.MMap
 import kotlinx.android.synthetic.main.mmap_fragment.*
 
 class MMapFragment : BaseMapFragment() {
