@@ -32,7 +32,8 @@ class MainActivity : BasePermissionActivity() {
     })
 
     btn_open.setOnClickListener {
-      locationGotWithPermissionCheck()
+      val intent = BaseMapActivity.newIntent(this)
+      startActivity(intent)
     }
 
     btn_read.setOnClickListener {
@@ -41,12 +42,17 @@ class MainActivity : BasePermissionActivity() {
     btn_write.setOnClickListener {
       writeSP()
     }
+
+    btn_start.setOnClickListener {
+      locationGotWithPermissionCheck()
+    }
+    btn_stop.setOnClickListener {
+      viewModel.locationLiveData.stopLocationUpdate()
+    }
   }
 
   override fun locationGot() {
-    viewModel.locationLiveData.requestLocation()
-    val intent = BaseMapActivity.newIntent(this)
-    startActivity(intent)
+    viewModel.locationLiveData.requestLocationUpdate()
   }
 
   private var index = 1

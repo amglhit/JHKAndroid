@@ -30,16 +30,16 @@ open class JHKApplication : MApplication() {
     firebase = FirebaseAnalytics.getInstance(this)
     Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
     if (isMainProcess()) {
-      LocationClient.initClient(this)
+      LocationClient.init(this)
     }
   }
 
   override fun onAppForeground() {
-
+    LocationClient.instance.foregroundMode()
   }
 
   override fun onAppBackground() {
-
+    LocationClient.instance.backgroundMode()
   }
 
   inner class ExceptionHandler : GlobalExceptionHandler() {

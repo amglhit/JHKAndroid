@@ -1,7 +1,7 @@
 package com.amglhit.jhk.home
 
 import android.arch.lifecycle.ViewModel
-import com.amglhit.mlocation.LocationLiveData
+import com.amglhit.mlocation.data.LocationLiveData
 import com.amglhit.msuite.data.ObservableData
 import io.reactivex.disposables.CompositeDisposable
 import timber.log.Timber
