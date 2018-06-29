@@ -1,4 +1,4 @@
-package com.amglhit.mmap.gd.map.ui
+package com.amglhit.mmap.gd.ui
 
 import com.amap.api.maps.AMap
 import com.amap.api.maps.AMapOptions

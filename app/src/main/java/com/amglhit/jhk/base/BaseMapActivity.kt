@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.amglhit.jhk.R
 import com.amglhit.mmap.base.BaseMapFragment
 import com.amglhit.mmap.base.IMapView
-import com.amglhit.mmap.gd.MMapFragment
+import com.amglhit.mmap.gd.GDMapFragment
 import com.amglhit.mmap.base.MapControllerFragment
 import timber.log.Timber
 
@@ -24,7 +24,7 @@ class BaseMapActivity : BaseActivity(), BaseMapFragment.MapFragmentCallback {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.base_map_activity)
     if (savedInstanceState == null) {
-      mapFragment = MMapFragment.newInstance()
+      mapFragment = GDMapFragment.newInstance()
       controllerFragment = MapControllerFragment.newInstance()
 
       supportFragmentManager.beginTransaction()

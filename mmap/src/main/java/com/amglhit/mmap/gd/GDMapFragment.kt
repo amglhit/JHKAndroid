@@ -5,14 +5,14 @@ import com.amglhit.mmap.base.BaseMapFragment
 import com.amglhit.mmap.base.IMapView
 import kotlinx.android.synthetic.main.mmap_fragment.*
 
-class MMapFragment : BaseMapFragment() {
+class GDMapFragment : BaseMapFragment() {
   companion object {
-    fun newInstance() = MMapFragment()
+    fun newInstance() = GDMapFragment()
   }
 
   override val layoutId: Int = R.layout.mmap_fragment
 
-  override fun createMapView(): IMapView = MMap(map_view)
+  override fun createMapView(): IMapView = GDMapImpl(map_view)
 
   override fun initView() {
   }

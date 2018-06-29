@@ -4,13 +4,13 @@ import android.os.Bundle
 import com.amap.api.maps.CameraUpdateFactory
 import com.amap.api.maps.MapView
 import com.amglhit.mmap.base.IMapView
-import com.amglhit.mmap.gd.map.ui.MyCameraUpdate
-import com.amglhit.mmap.gd.map.ui.animate
-import com.amglhit.mmap.gd.map.ui.myUiSettings
-import com.amglhit.mmap.gd.map.ui.showMyLocation
+import com.amglhit.mmap.gd.ui.MyCameraUpdate
+import com.amglhit.mmap.gd.ui.animate
+import com.amglhit.mmap.gd.ui.myUiSettings
+import com.amglhit.mmap.gd.ui.showMyLocation
 import timber.log.Timber
 
-class MMap(private val mapView: MapView) : IMapView {
+class GDMapImpl(private val mapView: MapView) : IMapView {
   init {
     mapView.map.setOnMyLocationChangeListener {
       Timber.d("my location: $it")
@@ -61,5 +61,9 @@ class MMap(private val mapView: MapView) : IMapView {
 
   override fun onSaveInstanceState(outState: Bundle?) {
     mapView.onSaveInstanceState(outState)
+  }
+
+  fun addMarker() {
+//    mapView.map.addMarker()
   }
 }
