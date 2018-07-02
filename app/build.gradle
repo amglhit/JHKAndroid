@@ -76,10 +76,14 @@ android {
     productFlavors {
         store {
             dimension "channel"
+            versionCode 1010
+            versionName "1.1"
 
         }
         google {
             dimension "channel"
+            versionCode 1020
+            versionName "1.2"
         }
     }
 
