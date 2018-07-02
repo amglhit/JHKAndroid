@@ -24,6 +24,8 @@ android {
     androidExtensions {
         experimental = true
     }
+
+//    println("====== current-m: " + currentFlavor + "    ==== " + forGooglePlay)
 }
 
 dependencies {

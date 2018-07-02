@@ -1,3 +1,6 @@
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
@@ -24,7 +27,7 @@ android {
             variant.outputs.each { output ->
                 String build = new Date().format("MMddHH") + (char) (65 + (int) ((Calendar.getInstance().get(Calendar.MINUTE) % 60) / 15))
                 String fileName =
-                        "jhk_${variant.versionName.replace(".", "")}_${variant.versionCode}_${variant.buildType.name}_build${build}.apk"
+                        "jhk_${variant.versionName.replace(".", "")}_${variant.versionCode}_${variant.buildType.name}_${variant.flavorName}_${build}.apk"
 
                 output.outputFileName = fileName
             }
@@ -69,12 +72,27 @@ android {
         jumboMode true
     }
 
+    flavorDimensions "channel"
+    productFlavors {
+        store {
+            dimension "channel"
+
+        }
+        google {
+            dimension "channel"
+        }
+    }
+
+    rootProject.ext.currentFlavor = getCurrentFlavor()
+    rootProject.ext.forGooglePlay = currentFlavor.contains("google")
+
+//    println("====== current-m: " + currentFlavor + "    ==== " + forGooglePlay)
+
     //!!! 避免api26引起的crash，所有依赖的support都改成全局support版本
     configurations.all {
         resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-            def requested = details.requested
-            if (requested.group == 'com.android.support') {
-                if (!requested.name.startsWith("multidex")) {
+            if (details.requested.group == 'com.android.support') {
+                if (!details.requested.name.startsWith("multidex")) {
                     details.useVersion "$versions.supportLibrary"
                 }
             }
@@ -125,3 +143,27 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
+
+def getCurrentFlavor() {
+    Gradle gradle = getGradle()
+    String taskReqStr = gradle.getStartParameter().getTaskRequests().toString()
+    Pattern pattern
+    if (taskReqStr.contains("assemble")) {
+        pattern = Pattern.compile("assemble(\\w+)(Release|Debug)")
+    } else {
+        pattern = Pattern.compile("generate(\\w+)(Release|Debug)")
+    }
+    Matcher matcher = pattern.matcher(taskReqStr)
+    if (matcher.find()) {
+        String flavor = matcher.group(1)
+        // This makes first character to lowercase.
+        char[] c = flavor.toCharArray()
+        c[0] = Character.toLowerCase(c[0])
+        flavor = new String(c)
+        println "getCurrentFlavor:" + flavor
+        return flavor
+    } else {
+        println "getCurrentFlavor:cannot_find_current_flavor"
+        return ""
+    }
+}
