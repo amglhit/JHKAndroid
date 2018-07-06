@@ -110,28 +110,28 @@ class JsonResource<T>(
   }
 }
 
-/**
- * 代码少但难看的方式
- */
-private class PrefData<T>(key: String, private val default: T) :
-  PreferenceDelegate<T>(key) {
-  override fun getValue(thisRef: PreferenceData, property: KProperty<*>): T {
-    return thisRef.getValue(getPrefKey(property), default)
-  }
+///**
+// * 代码少但难看的方式
+// */
+//private class PrefData<T>(key: String, private val default: T) :
+//  PreferenceDelegate<T>(key) {
+//  override fun getValue(thisRef: PreferenceData, property: KProperty<*>): T {
+//    return thisRef.getValue(getPrefKey(property), default)
+//  }
+//
+//  override fun setValue(thisRef: PreferenceData, property: KProperty<*>, value: T) {
+//    thisRef.putValue(getPrefKey(property), default)
+//  }
+//}
 
-  override fun setValue(thisRef: PreferenceData, property: KProperty<*>, value: T) {
-    thisRef.putValue(getPrefKey(property), default)
-  }
-}
-
-class PrefResource<T>(
-  private val key: String = "",
-  private val default: T
-) {
-  operator fun provideDelegate(
-    thisRef: PreferenceData,
-    prop: KProperty<*>
-  ): ReadWriteProperty<PreferenceData, T> {
-    return PrefData(key, default)
-  }
-}
+//class PrefResource<T>(
+//  private val key: String = "",
+//  private val default: T
+//) {
+//  operator fun provideDelegate(
+//    thisRef: PreferenceData,
+//    prop: KProperty<*>
+//  ): ReadWriteProperty<PreferenceData, T> {
+//    return PrefData(key, default)
+//  }
+//}
