@@ -7,8 +7,8 @@ import com.amglhit.msuite.sp.PreferenceData
 import com.google.gson.annotations.SerializedName
 
 class HomeSP : PreferenceData(JHKApplication.application, "com.amglhit.jhk.home") {
-  var mobikeHome by PrefString(default = "def-home")//PrefResource(default = "def-home")//
-  //  var mobikeHome: String by PrefResource(default = "def-home")//
+  var homeName by PrefString(default = "def-home")//PrefResource(default = "def-home")//
+  //  var homeName: String by PrefResource(default = "def-home")//
   var user: HomeUser by PrefJson(clazz = HomeUser::class.java, default = HomeUser.empty)
 }
 

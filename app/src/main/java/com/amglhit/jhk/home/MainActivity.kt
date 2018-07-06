@@ -59,7 +59,7 @@ class MainActivity : BasePermissionActivity() {
 
   private fun writeSP() {
     index++
-    viewModel.homeSP.mobikeHome = "test-name $index"
+    viewModel.homeSP.homeName = "test-name $index"
     viewModel.homeSP.user = HomeUser("test_user  $index", 1, city = UserCity("BeiJing"))
     Thread {
       Timber.d("change state at |${Thread.currentThread()}")
@@ -68,7 +68,7 @@ class MainActivity : BasePermissionActivity() {
   }
 
   private fun readSP() {
-    Timber.d("read from home sp ${viewModel.homeSP.mobikeHome}")
+    Timber.d("read from home sp ${viewModel.homeSP.homeName}")
     Timber.d("read from home sp ${viewModel.homeSP.user}")
   }
 }
