@@ -34,3 +34,8 @@
    @com.google.gson.annotations.SerializedName <methods>;
 }
 ##---------------End: proguard configuration for Gson ----------
+
+##---------------Begin: proguard configuration for Bugly ----------
+-dontwarn com.tencent.bugly.**
+-keep public class com.tencent.bugly.**{*;}
+##---------------End: proguard configuration for Bugly ----------

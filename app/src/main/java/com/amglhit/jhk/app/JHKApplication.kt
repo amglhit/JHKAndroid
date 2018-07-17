@@ -2,11 +2,15 @@ package com.amglhit.jhk.app
 
 import android.content.Context
 import android.support.multidex.MultiDex
+import com.amglhit.jhk.BuildConfig
 import com.amglhit.mlocation.client.LocationClient
 import com.amglhit.msuite.base.GlobalExceptionHandler
 import com.amglhit.msuite.base.MApplication
 import com.amglhit.msuite.isMainProcess
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.tencent.bugly.Bugly
+import com.tencent.bugly.crashreport.BuglyLog
+import com.tencent.bugly.crashreport.CrashReport
 import timber.log.Timber
 
 open class JHKApplication : MApplication() {
@@ -28,10 +32,23 @@ open class JHKApplication : MApplication() {
     super.onCreate()
     application = this
     firebase = FirebaseAnalytics.getInstance(this)
+    initBugly()
     Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
     if (isMainProcess()) {
-      LocationClient.init(this)
+      initLocationClient()
     }
+  }
+
+  private fun initBugly() {
+    val strategy = CrashReport.UserStrategy(this)
+    strategy.appChannel = "0"
+    strategy.appPackageName = this.packageName
+    strategy.appVersion = BuildConfig.VERSION_NAME
+    CrashReport.initCrashReport(this, "a5432c7cab", false, strategy)
+  }
+
+  private fun initLocationClient() {
+    LocationClient.init(this)
   }
 
   override fun onAppForeground() {
