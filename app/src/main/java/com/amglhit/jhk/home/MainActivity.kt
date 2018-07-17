@@ -8,6 +8,7 @@ import com.amglhit.jhk.base.BaseMapActivity
 import com.amglhit.jhk.base.BasePermissionActivity
 import com.amglhit.jhk.base.locationGotWithPermissionCheck
 import com.amglhit.jhk.splash.SplashActivity
+import com.crashlytics.android.Crashlytics
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -48,6 +49,10 @@ class MainActivity : BasePermissionActivity() {
     }
     btn_stop.setOnClickListener {
       viewModel.locationLiveData.stopLocationUpdate()
+    }
+
+    btn_crash.setOnClickListener {
+      Crashlytics.getInstance().crash()
     }
   }
 
