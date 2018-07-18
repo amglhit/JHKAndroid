@@ -5,8 +5,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'io.fabric'
-apply plugin: 'com.google.firebase.firebase-perf'
 
 android {
     compileSdkVersion versions.compileSdk
@@ -51,14 +49,21 @@ android {
         experimental = true
     }
 
+    rootProject.ext.currentFlavor = getCurrentFlavor()
+    rootProject.ext.forGooglePlay = currentFlavor.contains("google")
+
+    println("====== current: " + currentFlavor + "    ==== " + forGooglePlay)
+
     buildTypes {
         release {
+            buildConfigField "boolean", "GooglePlay", forGooglePlay.toString()
             minifyEnabled true
             shrinkResources true
             signingConfig signingConfigs.jhk
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
+            buildConfigField "boolean", "GooglePlay", forGooglePlay.toString()
             debuggable true
             signingConfig signingConfigs.jhk
         }
@@ -76,7 +81,7 @@ android {
 
     flavorDimensions "channel"
     productFlavors {
-        store {
+        common {
             dimension "channel"
             versionCode 1010
             versionName "1.1"
@@ -88,11 +93,6 @@ android {
             versionName "1.2"
         }
     }
-
-    rootProject.ext.currentFlavor = getCurrentFlavor()
-    rootProject.ext.forGooglePlay = currentFlavor.contains("google")
-
-//    println("====== current-m: " + currentFlavor + "    ==== " + forGooglePlay)
 
     //!!! 避免api26引起的crash，所有依赖的support都改成全局support版本
     configurations.all {
@@ -150,10 +150,14 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
-    implementation 'com.google.firebase:firebase-perf:16.0.0'
+//        implementation 'com.google.firebase:firebase-perf:16.0.0'
 }
 
-apply plugin: 'com.google.gms.google-services'
+if (forGooglePlay) {
+    apply plugin: 'io.fabric'
+//    apply plugin: 'com.google.firebase.firebase-perf'
+    apply plugin: 'com.google.gms.google-services'
+}
 
 def getCurrentFlavor() {
     Gradle gradle = getGradle()
@@ -171,10 +175,8 @@ def getCurrentFlavor() {
         char[] c = flavor.toCharArray()
         c[0] = Character.toLowerCase(c[0])
         flavor = new String(c)
-        println "getCurrentFlavor:" + flavor
         return flavor
     } else {
-        println "getCurrentFlavor:cannot_find_current_flavor"
         return ""
     }
 }

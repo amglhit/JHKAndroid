@@ -12,7 +12,6 @@ class DebugApplication : JHKApplication() {
   //  private lateinit var sonarClient: SonarClient
   override fun onCreate() {
     super.onCreate()
-    Timber.plant(Timber.DebugTree())
     Stetho.initializeWithDefaults(this)
 //
 //    SoLoader.init(this, 0)

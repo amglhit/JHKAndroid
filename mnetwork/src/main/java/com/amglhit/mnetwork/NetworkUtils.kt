@@ -53,8 +53,12 @@ object NetworkUtils {
   }
 
   private fun createSSLParam(key: InputStream, password: String): SSLParams {
-    val keyManagers = prepareKeyManagers(key, password)
-    val trustManager = prepareTrustManager(null)
+//    val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+//    keyStore.load(key, password.toCharArray())
+    val keyStore = createClientKeyStore(key, password)
+
+    val keyManagers = prepareKeyManagers(keyStore, password)
+    val trustManager = prepareTrustManager(keyStore)
 
     val sslContext = SSLContext.getInstance("TLS")
     sslContext.init(
@@ -66,23 +70,16 @@ object NetworkUtils {
     return SSLParams(sslContext.socketFactory, trustManager)
   }
 
-  private fun prepareKeyManagers(certificate: InputStream, password: String): Array<KeyManager> {
-    val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-    keyStore.load(certificate, password.toCharArray())
-    // Use it to build an X509 trust manager.
+  private fun prepareKeyManagers(keyStore: KeyStore, password: String): Array<KeyManager> {
     val keyManagerFactory =
       KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
     keyManagerFactory.init(keyStore, password.toCharArray())
     return keyManagerFactory.keyManagers
   }
 
-  private fun prepareTrustManager(certificate: InputStream?): X509TrustManager {
+  private fun prepareTrustManager(keyStore: KeyStore): X509TrustManager {
     val trustManagerFactory =
       TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-
-    val keyStore =
-      if (certificate != null) createClientKeyStore(certificate)
-      else newEmptyKeyStore()
 
     trustManagerFactory.init(keyStore)
 
@@ -101,15 +98,12 @@ object NetworkUtils {
   }
 
   @Throws(GeneralSecurityException::class)
-  private fun createClientKeyStore(certificate: InputStream): KeyStore {
+  private fun createClientKeyStore(certificate: InputStream, password: String): KeyStore {
     val certificateFactory = CertificateFactory.getInstance("X.509")
     val certificates = certificateFactory.generateCertificates(certificate)
-    if (certificates.isEmpty()) {
-      throw IllegalArgumentException("expected non-empty set of trusted certificates")
-    }
 
     // Put the certificates a key store.
-    val keyStore = newEmptyKeyStore()
+    val keyStore = newEmptyKeyStore(password)
 
     certificates.forEachIndexed { index, cert ->
       keyStore.setCertificateEntry(index.toString(), cert)
@@ -118,9 +112,9 @@ object NetworkUtils {
     return keyStore
   }
 
-  private fun newEmptyKeyStore(): KeyStore {
+  private fun newEmptyKeyStore(password: String): KeyStore {
     val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-    keyStore.load(null, "password".toCharArray())
+    keyStore.load(null, password.toCharArray())
     return keyStore
   }
 

@@ -31,9 +31,21 @@ open class JHKApplication : MApplication() {
   override fun onCreate() {
     super.onCreate()
     application = this
-    firebase = FirebaseAnalytics.getInstance(this)
+    if (BuildConfig.DEBUG) {
+      Timber.plant(Timber.DebugTree())
+    }
+
+    if (BuildConfig.GooglePlay) {
+      Timber.d("for GooglePlay")
+      firebase = FirebaseAnalytics.getInstance(this)
+    } else {
+      Timber.d("not for GooglePlay")
+    }
+
     initBugly()
+
     Thread.setDefaultUncaughtExceptionHandler(ExceptionHandler())
+
     if (isMainProcess()) {
       initLocationClient()
     }

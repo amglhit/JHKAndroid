@@ -9,13 +9,13 @@ import com.amglhit.jhk.base.BasePermissionActivity
 import com.amglhit.jhk.base.locationGotWithPermissionCheck
 import com.amglhit.jhk.splash.SplashActivity
 import com.crashlytics.android.Crashlytics
-import com.google.firebase.perf.metrics.AddTrace
+//import com.google.firebase.perf.metrics.AddTrace
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
 class MainActivity : BasePermissionActivity() {
   private lateinit var viewModel: HomeViewModel
-  @AddTrace(name = "onCreateMain")
+  //  @AddTrace(name = "onCreateMain")
   override fun onCreate(savedInstanceState: Bundle?) {
     setTheme(R.style.AppTheme_Light)
     super.onCreate(savedInstanceState)
