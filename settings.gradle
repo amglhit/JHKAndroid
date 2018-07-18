@@ -1,1 +1,1 @@
-include ':app', ':msuite', ':mlocation', ':mmap'
+include ':app', ':msuite', ':mlocation', ':mmap', ':mnetwork', ':mdeviceid'
