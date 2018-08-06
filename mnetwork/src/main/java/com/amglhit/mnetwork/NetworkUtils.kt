@@ -53,9 +53,9 @@ object NetworkUtils {
   }
 
   private fun createSSLParam(key: InputStream, password: String): SSLParams {
-//    val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
-//    keyStore.load(key, password.toCharArray())
-    val keyStore = createClientKeyStore(key, password)
+    val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+    keyStore.load(key, password.toCharArray())
+//    val keyStore = createClientKeyStore(key, password)
 
     val keyManagers = prepareKeyManagers(keyStore, password)
     val trustManager = prepareTrustManager(keyStore)
@@ -74,13 +74,13 @@ object NetworkUtils {
     val keyManagerFactory =
       KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
     keyManagerFactory.init(keyStore, password.toCharArray())
+
     return keyManagerFactory.keyManagers
   }
 
   private fun prepareTrustManager(keyStore: KeyStore): X509TrustManager {
     val trustManagerFactory =
       TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-
     trustManagerFactory.init(keyStore)
 
     return chooseTrustManager(trustManagerFactory.trustManagers) ?: unsafeTrustManager

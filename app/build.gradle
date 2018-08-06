@@ -80,6 +80,7 @@ android {
     }
 
     flavorDimensions "channel"
+
     productFlavors {
         common {
             dimension "channel"
@@ -157,6 +158,9 @@ if (forGooglePlay) {
     apply plugin: 'io.fabric'
 //    apply plugin: 'com.google.firebase.firebase-perf'
     apply plugin: 'com.google.gms.google-services'
+    println(" enable gms plugin")
+} else {
+    println(" disable gms plugin")
 }
 
 def getCurrentFlavor() {
