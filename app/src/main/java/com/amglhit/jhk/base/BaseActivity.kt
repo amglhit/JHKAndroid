@@ -1,9 +1,6 @@
 package com.amglhit.jhk.base
 
-import android.Manifest
 import android.support.v7.app.AppCompatActivity
-import com.amglhit.msuite.toast
-import permissions.dispatcher.*
 
 
 abstract class BaseActivity : AppCompatActivity() {

@@ -1,12 +1,12 @@
 package com.amglhit.mmap.gd.ui
 
 import android.graphics.Bitmap
+import android.view.animation.LinearInterpolator
 import com.amap.api.maps.AMap
 import com.amap.api.maps.model.BitmapDescriptorFactory
 import com.amap.api.maps.model.LatLng
 import com.amap.api.maps.model.Marker
 import com.amap.api.maps.model.MarkerOptions
-import android.view.animation.LinearInterpolator
 import com.amap.api.maps.model.animation.RotateAnimation
 
 fun AMap.addMarker(

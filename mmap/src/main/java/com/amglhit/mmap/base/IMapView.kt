@@ -2,7 +2,6 @@ package com.amglhit.mmap.base
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import com.amap.api.maps.model.Marker
 
 interface IMapView {
   companion object {

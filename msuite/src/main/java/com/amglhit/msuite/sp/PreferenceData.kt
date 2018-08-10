@@ -14,49 +14,49 @@ abstract class PreferenceData(
     )
   }
 
-  public fun clear() {
+  fun clear() {
     return pref.edit().clear().apply()
   }
 
-  public fun remove(key: String) {
+  fun remove(key: String) {
     if (key.isEmpty())
       return
     pref.edit().remove(key).apply()
   }
 
-  public fun getString(key: String, default: String = ""): String {
+  fun getString(key: String, default: String = ""): String {
     return pref.getString(key, default)
   }
 
-  public fun getInt(key: String, default: Int = -1): Int {
+  fun getInt(key: String, default: Int = -1): Int {
     return pref.getInt(key, default)
   }
 
-  public fun getFloat(key: String, default: Float = -1F): Float {
+  fun getFloat(key: String, default: Float = -1F): Float {
     return pref.getFloat(key, default)
   }
 
-  public fun getLong(key: String, default: Long = -1L): Long {
+  fun getLong(key: String, default: Long = -1L): Long {
     return pref.getLong(key, default)
   }
 
-  public fun getBoolean(key: String, default: Boolean = false): Boolean {
+  fun getBoolean(key: String, default: Boolean = false): Boolean {
     return pref.getBoolean(key, default)
   }
 
-  public fun putString(key: String, value: String) {
+  fun putString(key: String, value: String) {
     if (key.isEmpty())
       return
     pref.edit().putString(key, value).apply()
   }
 
-  public fun putInt(key: String, value: Int) {
+  fun putInt(key: String, value: Int) {
     if (key.isEmpty())
       return
     pref.edit().putInt(key, value).apply()
   }
 
-  public fun putLong(key: String, value: Long) {
+  fun putLong(key: String, value: Long) {
     if (key.isEmpty())
       return
     with(pref.edit()) {
@@ -64,13 +64,13 @@ abstract class PreferenceData(
     }
   }
 
-  public fun putFloat(key: String, value: Float) {
+  fun putFloat(key: String, value: Float) {
     if (key.isEmpty())
       return
     pref.edit().putFloat(key, value).apply()
   }
 
-  public fun putBoolean(key: String, value: Boolean) {
+  fun putBoolean(key: String, value: Boolean) {
     if (key.isEmpty())
       return
     pref.edit().putBoolean(key, value).apply()

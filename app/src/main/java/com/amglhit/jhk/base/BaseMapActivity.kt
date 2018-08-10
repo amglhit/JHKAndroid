@@ -6,8 +6,8 @@ import android.os.Bundle
 import com.amglhit.jhk.R
 import com.amglhit.mmap.base.BaseMapFragment
 import com.amglhit.mmap.base.IMapView
-import com.amglhit.mmap.gd.GDMapFragment
 import com.amglhit.mmap.base.MapControllerFragment
+import com.amglhit.mmap.gd.GDMapFragment
 import timber.log.Timber
 
 class BaseMapActivity : BaseActivity(), BaseMapFragment.MapFragmentCallback {

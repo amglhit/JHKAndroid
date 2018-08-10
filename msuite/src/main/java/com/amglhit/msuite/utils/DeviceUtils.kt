@@ -1,5 +1,6 @@
 package com.amglhit.msuite.utils
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.net.wifi.WifiManager
 import com.amglhit.msuite.dp2Px
@@ -40,6 +41,7 @@ private fun Int.toIpString(): String {
       (this shr 24 and 0xFF)
 }
 
+@SuppressLint("MissingPermission")
 fun Context.getWifiIp(): String {
   try {
     if (this.hasPermission(android.Manifest.permission.ACCESS_WIFI_STATE)) {

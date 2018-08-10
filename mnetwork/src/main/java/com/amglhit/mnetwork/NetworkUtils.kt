@@ -1,8 +1,7 @@
 package com.amglhit.mnetwork
 
-import okhttp3.CookieJar
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
+import android.annotation.SuppressLint
+import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -19,6 +18,9 @@ import javax.net.ssl.*
 object NetworkUtils {
   fun createHttpClient(clientConfig: HttpClientConfig): OkHttpClient {
     val builder = OkHttpClient.Builder()
+      .protocols(listOf(Protocol.HTTP_1_1))
+      .followRedirects(true)
+      .retryOnConnectionFailure(true)
       .connectTimeout(clientConfig.connectTimeout, TimeUnit.SECONDS)
       .readTimeout(clientConfig.readTimeout, TimeUnit.SECONDS)
       .writeTimeout(clientConfig.writeTimeout, TimeUnit.SECONDS)
@@ -43,7 +45,7 @@ object NetworkUtils {
     return builder.build()
   }
 
-  fun createRetrofit(baseUrl: String, httpClient: OkHttpClient): Retrofit {
+  fun createRetrofit(baseUrl: HttpUrl, httpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .baseUrl(baseUrl)
       .client(httpClient)
@@ -53,9 +55,8 @@ object NetworkUtils {
   }
 
   private fun createSSLParam(key: InputStream, password: String): SSLParams {
-    val keyStore = KeyStore.getInstance(KeyStore.getDefaultType())
+    val keyStore = KeyStore.getInstance("BKS")
     keyStore.load(key, password.toCharArray())
-//    val keyStore = createClientKeyStore(key, password)
 
     val keyManagers = prepareKeyManagers(keyStore, password)
     val trustManager = prepareTrustManager(keyStore)
@@ -74,14 +75,17 @@ object NetworkUtils {
     val keyManagerFactory =
       KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
     keyManagerFactory.init(keyStore, password.toCharArray())
-
     return keyManagerFactory.keyManagers
   }
 
-  private fun prepareTrustManager(keyStore: KeyStore): X509TrustManager {
+  private fun prepareTrustManager(keyStore: KeyStore? = null): X509TrustManager {
+//    return unsafeTrustManager
     val trustManagerFactory =
       TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-    trustManagerFactory.init(keyStore)
+
+    keyStore?.let {
+      trustManagerFactory.init(it)
+    }
 
     return chooseTrustManager(trustManagerFactory.trustManagers) ?: unsafeTrustManager
   }
@@ -122,6 +126,7 @@ object NetworkUtils {
     override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
     }
 
+    @SuppressLint("TrustAllX509TrustManager")
     override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
     }
 

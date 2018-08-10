@@ -1,5 +1,6 @@
 package com.amglhit.mnetwork
 
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 
@@ -22,9 +23,12 @@ class MNetwork {
   }
 
   fun init(baseUrl: String, clientConfig: HttpClientConfig): Boolean {
-    httpClient = NetworkUtils.createHttpClient(clientConfig)
-    retrofit = NetworkUtils.createRetrofit(baseUrl, httpClient)
-    return true
+    HttpUrl.parse(baseUrl)?.let {
+      httpClient = NetworkUtils.createHttpClient(clientConfig)
+      retrofit = NetworkUtils.createRetrofit(it, httpClient)
+      return true
+    }
+    return false
   }
 
 }

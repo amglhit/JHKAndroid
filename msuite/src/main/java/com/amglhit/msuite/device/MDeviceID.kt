@@ -1,10 +1,5 @@
 package com.amglhit.msuite.device
 
-import android.content.Context
-import android.preference.Preference
-import android.provider.Settings
-import java.util.*
-
 //fun Context.getGreenID(): String {
 //  var androidId: String? = Settings.Secure.ANDROID_ID
 //  if (androidId.isNullOrBlank()) {

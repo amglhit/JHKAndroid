@@ -1,5 +1,6 @@
 package com.amglhit.msuite.viewpager
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
@@ -16,6 +17,8 @@ class MViewPager : ViewPager {
     return false
   }
 
+
+  @SuppressLint("ClickableViewAccessibility")
   override fun onTouchEvent(ev: MotionEvent?): Boolean {
     return false
   }
