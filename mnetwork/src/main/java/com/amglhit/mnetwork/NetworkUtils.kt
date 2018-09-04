@@ -1,14 +1,14 @@
 package com.amglhit.mnetwork
 
-import android.annotation.SuppressLint
 import okhttp3.*
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
+import timber.log.Timber
+import java.io.IOException
 import java.io.InputStream
-import java.security.GeneralSecurityException
-import java.security.KeyStore
-import java.security.SecureRandom
+import java.security.*
+import java.security.cert.CertificateException
 import java.security.cert.CertificateFactory
 import java.security.cert.X509Certificate
 import java.util.*
@@ -18,9 +18,6 @@ import javax.net.ssl.*
 object NetworkUtils {
   fun createHttpClient(clientConfig: HttpClientConfig): OkHttpClient {
     val builder = OkHttpClient.Builder()
-      .protocols(listOf(Protocol.HTTP_1_1))
-      .followRedirects(true)
-      .retryOnConnectionFailure(true)
       .connectTimeout(clientConfig.connectTimeout, TimeUnit.SECONDS)
       .readTimeout(clientConfig.readTimeout, TimeUnit.SECONDS)
       .writeTimeout(clientConfig.writeTimeout, TimeUnit.SECONDS)
@@ -37,9 +34,8 @@ object NetworkUtils {
       builder.cookieJar(it)
     }
 
-    clientConfig.keyFile?.let {
-      val param = createSSLParam(it, clientConfig.password)
-      builder.sslSocketFactory(param.sslSocketFactory, param.x509TrustManager)
+    clientConfig.sslParams?.let {
+      builder.sslSocketFactory(it.sslSocketFactory, it.x509TrustManager)
     }
 
     return builder.build()
@@ -54,55 +50,81 @@ object NetworkUtils {
       .build()
   }
 
-  private fun createSSLParam(key: InputStream, password: String): SSLParams {
-    val keyStore = KeyStore.getInstance("BKS")
-    keyStore.load(key, password.toCharArray())
+  fun createSSLParams(keyFile: InputStream, password: String, unsafe: Boolean = false): SSLParams? {
+    try {
+      var keyManagers: Array<KeyManager>? = null
+      var trustManager = NetworkUtils.unsafeTrustManager
+      try {
+        val keyStore = NetworkUtils.createKeyStore(keyFile, password)
+        keyManagers = NetworkUtils.prepareKeyManagers(keyStore, password)
+      } catch (e: Exception) {
+        Timber.e(e)
+      }
 
-    val keyManagers = prepareKeyManagers(keyStore, password)
-    val trustManager = prepareTrustManager(keyStore)
+      if (!unsafe) {
+        try {
+          trustManager = NetworkUtils.prepareTrustManager(null)
+        } catch (e: Exception) {
+          Timber.e(e)
+        }
+      }
 
-    val sslContext = SSLContext.getInstance("TLS")
-    sslContext.init(
-      keyManagers,
-      arrayOf(trustManager),
-      SecureRandom()
-    )
+      val sslContext = createSSlContext(keyManagers, trustManager)
 
-    return SSLParams(sslContext.socketFactory, trustManager)
+      return SSLParams(sslContext.socketFactory, trustManager)
+    } catch (e: Exception) {
+      Timber.e(e)
+      return null
+    }
   }
 
-  private fun prepareKeyManagers(keyStore: KeyStore, password: String): Array<KeyManager> {
+  @Throws(
+    NoSuchAlgorithmException::class,
+    KeyManagementException::class
+  )
+  fun createSSlContext(keyManagers: Array<KeyManager>?, trustManager: TrustManager): SSLContext {
+    val sslContext = SSLContext.getInstance("TLS")
+    sslContext.init(keyManagers, arrayOf(trustManager), SecureRandom())
+    return sslContext
+  }
+
+  @Throws(
+    KeyStoreException::class,
+    NoSuchAlgorithmException::class,
+    IOException::class,
+    CertificateException::class
+  )
+  fun createKeyStore(inputStream: InputStream, password: String): KeyStore {
+    val keyStore = KeyStore.getInstance("BKS")
+    keyStore.load(inputStream, password.toCharArray())
+    return keyStore
+  }
+
+  @Throws(
+    NoSuchAlgorithmException::class,
+    KeyStoreException::class,
+    UnrecoverableKeyException::class
+  )
+  fun prepareKeyManagers(keyStore: KeyStore, password: String): Array<KeyManager> {
     val keyManagerFactory =
       KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm())
+
     keyManagerFactory.init(keyStore, password.toCharArray())
+
     return keyManagerFactory.keyManagers
   }
 
-  private fun prepareTrustManager(keyStore: KeyStore? = null): X509TrustManager {
-//    return unsafeTrustManager
+  @Throws(NoSuchAlgorithmException::class, KeyStoreException::class)
+  fun prepareTrustManager(trustStore: KeyStore?): X509TrustManager {
     val trustManagerFactory =
       TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
-
-    keyStore?.let {
-      trustManagerFactory.init(it)
-    }
+    trustManagerFactory.init(trustStore)
 
     return chooseTrustManager(trustManagerFactory.trustManagers) ?: unsafeTrustManager
   }
 
-  private fun chooseTrustManager(trustManagers: Array<TrustManager>?): X509TrustManager? {
-    if (trustManagers == null)
-      return null
-    for (trustManager in trustManagers) {
-      if (trustManager is X509TrustManager) {
-        return trustManager
-      }
-    }
-    return null
-  }
-
   @Throws(GeneralSecurityException::class)
-  private fun createClientKeyStore(certificate: InputStream, password: String): KeyStore {
+  fun createTrustStore(certificate: InputStream, password: String): KeyStore {
     val certificateFactory = CertificateFactory.getInstance("X.509")
     val certificates = certificateFactory.generateCertificates(certificate)
 
@@ -122,11 +144,21 @@ object NetworkUtils {
     return keyStore
   }
 
-  private val unsafeTrustManager = object : X509TrustManager {
+  private fun chooseTrustManager(trustManagers: Array<TrustManager>?): X509TrustManager? {
+    if (trustManagers == null)
+      return null
+    for (trustManager in trustManagers) {
+      if (trustManager is X509TrustManager) {
+        return trustManager
+      }
+    }
+    return null
+  }
+
+  val unsafeTrustManager = object : X509TrustManager {
     override fun checkClientTrusted(chain: Array<out X509Certificate>?, authType: String?) {
     }
 
-    @SuppressLint("TrustAllX509TrustManager")
     override fun checkServerTrusted(chain: Array<out X509Certificate>?, authType: String?) {
     }
 
@@ -136,7 +168,10 @@ object NetworkUtils {
   }
 }
 
-data class SSLParams(val sslSocketFactory: SSLSocketFactory, val x509TrustManager: X509TrustManager)
+data class SSLParams(
+  val sslSocketFactory: SSLSocketFactory,
+  val x509TrustManager: X509TrustManager
+)
 
 open class HttpClientConfig {
   open val readTimeout: Long = 10L
@@ -148,6 +183,5 @@ open class HttpClientConfig {
 
   open val cookieJar: CookieJar? = null
 
-  open val keyFile: InputStream? = null
-  open val password: String = ""
+  open val sslParams: SSLParams? = null
 }

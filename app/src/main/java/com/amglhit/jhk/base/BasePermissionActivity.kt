@@ -1,7 +1,7 @@
 package com.amglhit.jhk.base
 
 import android.Manifest
-import com.amglhit.msuite.toast
+import com.amglhit.msuite.utils.toast
 import permissions.dispatcher.*
 
 @RuntimePermissions

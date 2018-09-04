@@ -6,7 +6,7 @@ import com.amglhit.jhk.BuildConfig
 import com.amglhit.mlocation.client.LocationClient
 import com.amglhit.msuite.base.GlobalExceptionHandler
 import com.amglhit.msuite.base.MApplication
-import com.amglhit.msuite.isMainProcess
+import com.amglhit.msuite.utils.isMainProcess
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.tencent.bugly.crashreport.CrashReport
 import timber.log.Timber

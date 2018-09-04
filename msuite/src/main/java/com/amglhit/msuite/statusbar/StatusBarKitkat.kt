@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar
 import android.util.TypedValue
 import android.view.*
 import android.widget.FrameLayout
-import com.amglhit.msuite.px2DP
+import com.amglhit.msuite.utils.px2DP
 import com.amglhit.msuite.utils.statusBarHeight
 
 object StatusBarKitkat {

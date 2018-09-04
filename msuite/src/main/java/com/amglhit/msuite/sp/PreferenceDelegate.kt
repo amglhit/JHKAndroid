@@ -1,6 +1,7 @@
 package com.amglhit.msuite.sp
 
 import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 import java.lang.Exception
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
@@ -34,6 +35,31 @@ class PrefJson<T>(key: String = "", private val clazz: Class<T>, private val def
       return
     try {
       val json = Gson().toJson(value, clazz)
+      thisRef.putString(getPrefKey(property), json)
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+  }
+}
+
+class PrefMoshi<T>(key: String = "", private val clazz: Class<T>, private val default: T) :
+  PreferenceDelegate<T>(key) {
+  override fun getValue(thisRef: PreferenceData, property: KProperty<*>): T {
+    try {
+      val json = thisRef.getString(getPrefKey(property), "")
+      if (json.isNotEmpty())
+        return Moshi.Builder().build().adapter(clazz).fromJson(json) ?: default
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+    return default
+  }
+
+  override fun setValue(thisRef: PreferenceData, property: KProperty<*>, value: T) {
+    if (value == null)
+      return
+    try {
+      val json = Moshi.Builder().build().adapter(clazz).toJson(value)
       thisRef.putString(getPrefKey(property), json)
     } catch (e: Exception) {
       e.printStackTrace()

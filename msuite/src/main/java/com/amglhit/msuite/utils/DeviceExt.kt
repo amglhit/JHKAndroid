@@ -3,36 +3,8 @@ package com.amglhit.msuite.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.net.wifi.WifiManager
-import com.amglhit.msuite.dp2Px
-import com.amglhit.msuite.hasPermission
 import java.net.Inet4Address
 import java.net.NetworkInterface
-
-fun Context.screenHeight() = this.resources.displayMetrics.heightPixels
-fun Context.screenWidth() = this.resources.displayMetrics.widthPixels
-
-fun Context.statusBarHeight(): Int {
-  val resourceId = this.resources.getIdentifier("status_bar_height", "dimen", "android")
-  return if (resourceId > 0) {
-    this.resources.getDimensionPixelSize(resourceId)
-  } else {
-    24.dp2Px(this)
-  }
-}
-
-fun Context.navigationBarHeight(): Int {
-  var result = 0
-  val resourceId = this.resources.getIdentifier("navigation_bar_height", "dimen", "android")
-  if (resourceId > 0) {
-    result = this.resources.getDimensionPixelSize(resourceId)
-  }
-  return result
-}
-
-fun Context.hasNavigationBar(): Boolean {
-  val id = this.resources.getIdentifier("config_showNavigationBar", "bool", "android")
-  return id > 0 && this.resources.getBoolean(id)
-}
 
 private fun Int.toIpString(): String {
   return (this and 0xFF).toString() + "." +
@@ -42,6 +14,7 @@ private fun Int.toIpString(): String {
 }
 
 @SuppressLint("MissingPermission")
+@Throws(SecurityException::class)
 fun Context.getWifiIp(): String {
   try {
     if (this.hasPermission(android.Manifest.permission.ACCESS_WIFI_STATE)) {
@@ -56,7 +29,7 @@ fun Context.getWifiIp(): String {
   return ""
 }
 
-fun getMobileIpAddress(): String {
+fun getMobileIp(): String {
   try {
     val en = NetworkInterface.getNetworkInterfaces()
     while (en.hasMoreElements()) {

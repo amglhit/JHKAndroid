@@ -3,7 +3,7 @@ package com.amglhit.msuite.statusbar
 import android.app.Activity
 import android.os.Build
 import android.view.WindowManager
-import com.amglhit.msuite.systemProperty
+import com.amglhit.msuite.utils.systemProperty
 
 object LightStatusBar {
   fun getLightStatusBarRomType(): RomType =
