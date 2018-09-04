@@ -1,4 +1,4 @@
-package com.amglhit.mnetwork
+package com.amglhit.mnetwork.utils
 
 import okhttp3.*
 import retrofit2.Retrofit
@@ -41,7 +41,7 @@ object NetworkUtils {
     return builder.build()
   }
 
-  fun createRetrofit(baseUrl: HttpUrl, httpClient: OkHttpClient): Retrofit {
+  fun createRetrofit(baseUrl: String, httpClient: OkHttpClient): Retrofit {
     return Retrofit.Builder()
       .baseUrl(baseUrl)
       .client(httpClient)
@@ -50,26 +50,40 @@ object NetworkUtils {
       .build()
   }
 
-  fun createSSLParams(keyFile: InputStream, password: String, unsafe: Boolean = false): SSLParams? {
+  fun createSSLParams(
+    keyFile: InputStream?,
+    password: String,
+    unsafe: Boolean = false,
+    trustKey: InputStream? = null
+  ): SSLParams? {
     try {
       var keyManagers: Array<KeyManager>? = null
-      var trustManager = NetworkUtils.unsafeTrustManager
-      try {
-        val keyStore = NetworkUtils.createKeyStore(keyFile, password)
-        keyManagers = NetworkUtils.prepareKeyManagers(keyStore, password)
-      } catch (e: Exception) {
-        Timber.e(e)
-      }
-
-      if (!unsafe) {
+      var trustManager = unsafeTrustManager
+      if (keyFile != null) {
         try {
-          trustManager = NetworkUtils.prepareTrustManager(null)
+          val keyStore =
+            createKeyStore(keyFile, password)
+          keyManagers =
+              prepareKeyManagers(keyStore, password)
         } catch (e: Exception) {
           Timber.e(e)
         }
       }
 
-      val sslContext = createSSlContext(keyManagers, trustManager)
+      if (!unsafe) {
+        try {
+          var trustStore: KeyStore? = null
+          if (trustKey != null) {
+            trustStore = createTrustStore(trustKey, "")
+          }
+          trustManager = prepareTrustManager(trustStore)
+        } catch (e: Exception) {
+          Timber.e(e)
+        }
+      }
+
+      val sslContext =
+        createSSlContext(keyManagers, trustManager)
 
       return SSLParams(sslContext.socketFactory, trustManager)
     } catch (e: Exception) {
@@ -120,7 +134,8 @@ object NetworkUtils {
       TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm())
     trustManagerFactory.init(trustStore)
 
-    return chooseTrustManager(trustManagerFactory.trustManagers) ?: unsafeTrustManager
+    return chooseTrustManager(trustManagerFactory.trustManagers)
+      ?: unsafeTrustManager
   }
 
   @Throws(GeneralSecurityException::class)
