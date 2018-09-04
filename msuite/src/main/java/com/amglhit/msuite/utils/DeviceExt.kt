@@ -1,8 +1,13 @@
 package com.amglhit.msuite.utils
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.net.wifi.WifiManager
+import android.os.Build
+import android.provider.Settings
+import android.telephony.TelephonyManager
 import java.net.Inet4Address
 import java.net.NetworkInterface
 
@@ -70,4 +75,65 @@ fun getMacAddress(): String {
     e.printStackTrace()
   }
   return ""
+}
+
+@SuppressWarnings("MissingPermission")
+fun Context.isBleEnabled(): Boolean {
+  if (this.hasPermission(Manifest.permission.BLUETOOTH)) {
+    return BluetoothAdapter.getDefaultAdapter()?.isEnabled ?: false
+  }
+  return false
+}
+
+@SuppressWarnings("MissingPermission")
+fun Context.openBle(): Boolean {
+  if (this.hasPermission(Manifest.permission.BLUETOOTH_ADMIN)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      return BluetoothAdapter.getDefaultAdapter()?.enable() ?: false
+    }
+  }
+  return false
+}
+
+@SuppressWarnings("MissingPermission")
+fun Context.closeBle(): Boolean {
+  if (this.hasPermission(Manifest.permission.BLUETOOTH) && this.hasPermission(Manifest.permission.BLUETOOTH_ADMIN)) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      val btAdapter = BluetoothAdapter.getDefaultAdapter()
+      if (btAdapter?.isEnabled == true) {
+        return btAdapter.disable()
+      }
+    }
+  }
+  return false
+}
+
+@SuppressWarnings("MissingPermission")
+fun Context.getIMEI(): String {
+  try {
+    if (this.hasPermission(Manifest.permission.READ_PHONE_STATE)) {
+      val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager?
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        return tm?.imei ?: ""
+      } else {
+        return tm?.deviceId ?: ""
+      }
+    }
+  } catch (e: Exception) {
+    e.printStackTrace()
+  }
+  return ""
+}
+
+fun Context.getAndroidId(): String {
+  return try {
+    val androidId = Settings.Secure.getString(
+      this.contentResolver,
+      Settings.Secure.ANDROID_ID
+    )
+    if (androidId != null) androidId else ""
+  } catch (e: Exception) {
+    e.printStackTrace()
+    ""
+  }
 }
